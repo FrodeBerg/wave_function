@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+}
+
+.App {
+    height: 100vh;
+    display: grid;
+    grid-template: 1fr 60px / 60px 1fr;
+}
+
+.Side {
+    grid-area: 1 / 1 / 3  / 1;
+    background-color: black;
+    color: white;
+}
+
+.Bottom {
+    grid-area: 2 / 2 / 3 / 3;
+    background-color: grey;
+    color: white; 
+}
+
+.Main {
+    grid-area: 1 / 2 / 3 / 3;
+    background-color: blue;
+    color: white;    
+}
