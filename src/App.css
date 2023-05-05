@@ -18,6 +18,8 @@ body {
     grid-area: 2 / 2 / 3 / 3;
     background-color: grey;
     color: white; 
+    display: flex;
+    justify-content: space-around;
 }
 
 .Main {
