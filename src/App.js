@@ -1,4 +1,6 @@
 import './App.css';
+import {React, useState} from 'react';
+
 
 function App() {
   return (
@@ -11,9 +13,21 @@ function App() {
 }
 
 function Main() {
+  const [posY, setPosY] = useState(0)
+  const [posX, setPosX] = useState(0)
+
+  document.onmousemove = (e) => {
+    if (e.target.id !== "canvas") return
+    let rect = e.target.getBoundingClientRect();
+
+    setPosX(e.clientX - Math.floor(rect.left));
+    setPosY(e.clientY - Math.floor(rect.top));
+  }
+
   return (
     <div className="Main"> 
-      <canvas></canvas>
+      <canvas id="canvas"></canvas> 
+      <h3>Y: {posY}, X: {posX}</h3>
     </div>
   )
 }

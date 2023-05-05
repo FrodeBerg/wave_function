@@ -24,4 +24,14 @@ body {
     grid-area: 1 / 2 / 3 / 3;
     background-color: blue;
     color: white;    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+canvas {
+    background-color: grey;
+    width: 100px;
+    height: 100px;
 }
