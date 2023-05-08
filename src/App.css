@@ -3,6 +3,13 @@ body {
     overflow: hidden;
 }
 
+button {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 0px;
+}
+
 .App {
     height: 100vh;
     display: grid;
@@ -40,4 +47,8 @@ canvas {
     image-rendering: pixelated;
     width: 400px;
     height: 400px;
+}
+
+.active {
+    background-color: grey;
 }

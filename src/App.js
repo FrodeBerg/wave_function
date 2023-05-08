@@ -1,27 +1,27 @@
 import './App.css';
 import Canvas from './components/Canvas'
-import {React} from 'react';
+import {React, useState} from 'react';
 
 function App() {
+  const [page, setPage] = useState("canvas")
 
   let Main = <Canvas />
   return (
     <div className="App">
-      <Side /> 
+      <Side page={page} setPage={setPage}/> 
       {Main}
     </div>
   );
 }
 
-function Side() {
+function Side(props) {
   return (
     <div className="Side"> 
-      <h2>Canvas</h2>
-      <h2>Rules</h2>
-      <h2>Play</h2>
+      <button onClick={() => props.setPage("canvas")} className={props.page === "canvas" ? "active" : ""}>Canvas</button>
+      <button onClick={() => props.setPage("rules")} className={props.page === "rules" ? "active" : ""}>Rules</button>
+      <button onClick={() => props.setPage("play")} className={props.page === "play" ? "active" : ""}>Play</button>
     </div>
   )
 }
-
 
 export default App;
