@@ -56,7 +56,7 @@ function move(e, size, color) {
   let posY = Math.floor((e.clientY - rect.top) / canvas.offsetHeight * canvas.height);
   let ctx = canvas.getContext("2d");
   ctx.fillStyle = color;
-  ctx.fillRect(posX, posY, size, size)   
+  ctx.fillRect(posX - Math.floor(size / 2), posY - Math.floor(size / 2), size, size)   
   // console.log(ctx.getImageData(0,0, canvas.width, canvas.height))   
 }
 
