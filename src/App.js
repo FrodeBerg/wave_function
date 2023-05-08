@@ -25,19 +25,23 @@ function App() {
 function Main(props) {
 
   let ratio = props.size.x / props.size.y
-  console.log(ratio)
-
+  let height = 400
+  let width = 400 * ratio;
+  
+  if (ratio > 2) { 
+    width = 800
+    height = 800 / ratio
+  }
+  console.log(height)
   return (
     <div className="Main"> 
-      <div className='canvasContainer'>
-        <canvas id="canvas" 
-        onMouseDown={(e) => {move(e, props.brushSize, props.color)}} 
-        onMouseMove={(e) => {if (isPressed) move(e, props.brushSize, props.color)}} 
-        width={props.size.x} 
-        height={props.size.y}
-        style={{"width": `${400 * ratio}px`}}>
-        </canvas>
-      </div>
+      <canvas id="canvas" 
+      onMouseDown={(e) => {move(e, props.brushSize, props.color)}} 
+      onMouseMove={(e) => {if (isPressed) move(e, props.brushSize, props.color)}} 
+      width={props.size.x} 
+      height={props.size.y}
+      style={{"width": width,"height" : height}}>
+      </canvas>
     </div>
   )
 }
@@ -50,10 +54,10 @@ function move(e, size, color) {
 
   let posX = Math.floor((e.clientX - rect.left) / canvas.offsetWidth * canvas.width);
   let posY = Math.floor((e.clientY - rect.top) / canvas.offsetHeight * canvas.height);
-  console.log(color)
   let ctx = canvas.getContext("2d");
   ctx.fillStyle = color;
-  ctx.fillRect(posX, posY, size, size)      
+  ctx.fillRect(posX, posY, size, size)   
+  // console.log(ctx.getImageData(0,0, canvas.width, canvas.height))   
 }
 
 function Side() {
@@ -70,10 +74,10 @@ function Bottom(props) {
 
   return (
     <div className="Bottom"> 
-      <input placeholder={props.size.x} onChange={(e) => {props.setSize({...props.size, "x" : +e.target.value})}}/>
-      <input placeholder={props.size.y} onChange={(e) => {props.setSize({...props.size, "y" : +e.target.value})}}/>
-      <input placeholder={props.brushSize} onChange={(e) => {props.setBrushSize(+e.target.value)}}/>
-      <input type={"color"} placeholder={props.color} onChange={(e) => {props.setColor(e.target.value)}}/>
+      <input placeholder={10} onChange={(e) => {props.setSize({...props.size, "x" : +e.target.value})}}/>
+      <input placeholder={10} onChange={(e) => {props.setSize({...props.size, "y" : +e.target.value})}}/>
+      <input placeholder={1} onChange={(e) => {props.setBrushSize(+e.target.value)}}/>
+      <input type={"color"} placeholder={"#000000"} onChange={(e) => {props.setColor(e.target.value)}}/>
     </div>
   )
 }

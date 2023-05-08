@@ -32,14 +32,6 @@ body {
     align-items: center;
 }
 
-.canvasContainer {
-    width: 800px;
-    height: 400px;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-}
-
 canvas {
     background-color: white;
     image-rendering: pixelated;
