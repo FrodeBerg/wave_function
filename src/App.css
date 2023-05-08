@@ -24,18 +24,25 @@ body {
 }
 
 .Main {
-    grid-area: 1 / 2 / 3 / 3;
+    grid-area: 1 / 2 / 2 / 3;
     background-color: blue;
     color: white;    
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-content: center;
+    align-items: center;
+}
+
+.canvasContainer {
+    width: 800px;
+    height: 400px;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
 }
 
 canvas {
     background-color: white;
     image-rendering: pixelated;
-    width: 100px;
-    height: 100px;
+    width: 400px;
+    height: 400px;
 }

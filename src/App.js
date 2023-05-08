@@ -23,14 +23,21 @@ function App() {
 }
 
 function Main(props) {
+
+  let ratio = props.size.x / props.size.y
+  console.log(ratio)
+
   return (
     <div className="Main"> 
-      <canvas id="canvas" 
-      onMouseDown={(e) => {move(e, props.brushSize, props.color)}} 
-      onMouseMove={(e) => {if (isPressed) move(e, props.brushSize, props.color)}} 
-      width={props.size.x} 
-      height={props.size.y}>
-      </canvas> 
+      <div className='canvasContainer'>
+        <canvas id="canvas" 
+        onMouseDown={(e) => {move(e, props.brushSize, props.color)}} 
+        onMouseMove={(e) => {if (isPressed) move(e, props.brushSize, props.color)}} 
+        width={props.size.x} 
+        height={props.size.y}
+        style={{"width": `${400 * ratio}px`}}>
+        </canvas>
+      </div>
     </div>
   )
 }
@@ -41,8 +48,8 @@ function move(e, size, color) {
 
   let rect = e.target.getBoundingClientRect();
 
-  let posX = Math.floor((e.clientX - rect.left) / 100 * canvas.width);
-  let posY = Math.floor((e.clientY - rect.top) / 100 * canvas.height);
+  let posX = Math.floor((e.clientX - rect.left) / canvas.offsetWidth * canvas.width);
+  let posY = Math.floor((e.clientY - rect.top) / canvas.offsetHeight * canvas.height);
   console.log(color)
   let ctx = canvas.getContext("2d");
   ctx.fillStyle = color;
