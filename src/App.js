@@ -1,49 +1,52 @@
 import './App.css';
 import {React, useState} from 'react';
 
+let isPressed = false;
+
+document.onmousedown = () => isPressed = true
+document.onmouseup = () => isPressed = false
 
 function App() {
   const [size, setSize] = useState({"x" : 10, "y" : 10})
-  
-  function setSizeFunction(indicator, value) {
-    setSize({
-      ...size,
-      [indicator] : +value
-    })
-  }
-
-
-
+  const [brushSize, setBrushSize] = useState(1)
+  const [color, setColor] = useState("#000000")
   return (
     <div className="App">
-      <Main size = {size}/> 
+      <Main size = {size} brushSize={brushSize} color={color}/> 
       <Side /> 
-      <Bottom size={size} setSize={setSizeFunction}/>
+      <Bottom size={size} setSize={setSize} 
+      brushSize={brushSize} setBrushSize={setBrushSize}
+      color={color} setColor={setColor}
+      />
     </div>
   );
 }
 
 function Main(props) {
-  let isPressed = false;
   return (
     <div className="Main"> 
-      <canvas id="canvas" onMouseDown={(e) => {isPressed = true; move(e)}} onMouseUp={() => isPressed = false} onMouseMove={(e) => {if (isPressed) move(e)}} width={props.size.x} height={props.size.y}></canvas> 
+      <canvas id="canvas" 
+      onMouseDown={(e) => {move(e, props.brushSize, props.color)}} 
+      onMouseMove={(e) => {if (isPressed) move(e, props.brushSize, props.color)}} 
+      width={props.size.x} 
+      height={props.size.y}>
+      </canvas> 
     </div>
   )
 }
 
-function move(e) {
+function move(e, size, color) {
   const canvas = document.getElementById("canvas")    
-  if (!canvas || e.target.id !== "canvas") return
+  if ( e.target.id !== "canvas") return
 
   let rect = e.target.getBoundingClientRect();
 
   let posX = Math.floor((e.clientX - rect.left) / 100 * canvas.width);
   let posY = Math.floor((e.clientY - rect.top) / 100 * canvas.height);
-
+  console.log(color)
   let ctx = canvas.getContext("2d");
-  ctx.fillStyle = "rgb("+0+", "+0+", "+0+")";
-  ctx.fillRect(posX, posY, 1, 1)      
+  ctx.fillStyle = color;
+  ctx.fillRect(posX, posY, size, size)      
 }
 
 function Side() {
@@ -60,9 +63,10 @@ function Bottom(props) {
 
   return (
     <div className="Bottom"> 
-      <input label={props.size[0]} onChange={(e) => {props.setSize("x", (e.target.value))}}/>
-      <input label={props.size[1]} onChange={(e) => {props.setSize("y", (e.target.value))}}/>
-      <h2>scale : 1</h2>
+      <input placeholder={props.size.x} onChange={(e) => {props.setSize({...props.size, "x" : +e.target.value})}}/>
+      <input placeholder={props.size.y} onChange={(e) => {props.setSize({...props.size, "y" : +e.target.value})}}/>
+      <input placeholder={props.brushSize} onChange={(e) => {props.setBrushSize(+e.target.value)}}/>
+      <input type={"color"} placeholder={props.color} onChange={(e) => {props.setColor(e.target.value)}}/>
     </div>
   )
 }
