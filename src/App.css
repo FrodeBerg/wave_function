@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    overflow: hidden;
 }
 
 .App {
@@ -34,6 +35,7 @@ body {
 
 canvas {
     background-color: grey;
+    image-rendering: pixelated;
     width: 100px;
     height: 100px;
 }

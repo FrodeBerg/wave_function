@@ -3,7 +3,7 @@ import {React, useState} from 'react';
 
 
 function App() {
-  const [size, setSize] = useState({"x" : 0, "y" : 0})
+  const [size, setSize] = useState({"x" : 10, "y" : 10})
   
   function setSizeFunction(indicator, value) {
     setSize({
@@ -11,6 +11,8 @@ function App() {
       [indicator] : +value
     })
   }
+
+
 
   return (
     <div className="App">
@@ -22,24 +24,26 @@ function App() {
 }
 
 function Main(props) {
-  const [posY, setPosY] = useState(0)
-  const [posX, setPosX] = useState(0)
-
-  document.onmousemove = (e) => {
-    if (e.target.id !== "canvas") return
-    let rect = e.target.getBoundingClientRect();
-
-    setPosX(e.clientX - Math.floor(rect.left));
-    setPosY(e.clientY - Math.floor(rect.top));
-  }
-
+  let isPressed = false;
   return (
     <div className="Main"> 
-      <canvas id="canvas"></canvas> 
-      <h3>Y: {posY}, X: {posX}</h3>
-      <h3>SizeX: {props.size.x}, SizeY: {props.size.y}</h3>
+      <canvas id="canvas" onMouseDown={(e) => {isPressed = true; move(e)}} onMouseUp={() => isPressed = false} onMouseMove={(e) => {if (isPressed) move(e)}} width={props.size.x} height={props.size.y}></canvas> 
     </div>
   )
+}
+
+function move(e) {
+  const canvas = document.getElementById("canvas")    
+  if (!canvas || e.target.id !== "canvas") return
+
+  let rect = e.target.getBoundingClientRect();
+
+  let posX = Math.floor((e.clientX - rect.left) / 100 * canvas.width);
+  let posY = Math.floor((e.clientY - rect.top) / 100 * canvas.height);
+
+  let ctx = canvas.getContext("2d");
+  ctx.fillStyle = "rgb("+0+", "+0+", "+0+")";
+  ctx.fillRect(posX, posY, 1, 1)      
 }
 
 function Side() {
