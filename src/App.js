@@ -4,11 +4,12 @@ import {React, useState} from 'react';
 
 function App() {
   const [page, setPage] = useState("canvas")
-
+  const [canvasData, setCanvasData] = useState([])
+  console.log(canvasData)
   return (
     <div className="App">
       <Side page={page} setPage={setPage}/> 
-      <Canvas style={page === "canvas" ? "" : "none"} /> 
+      <Canvas style={page === "canvas" ? "" : "none"} setCanvasData={setCanvasData}/> 
       <div style={{display : page === "rules" ? "" : "none"}} /> 
       <div style={{display : page === "play" ? "" : "none"}} /> 
     </div>
