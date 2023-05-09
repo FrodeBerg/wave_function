@@ -10,6 +10,17 @@ button {
     border-radius: 0px;
 }
 
+canvas {
+    background-color: white;
+    image-rendering: pixelated;
+    width: 400px;
+    height: 400px;
+}
+
+li {
+    list-style: none;
+}
+
 .App {
     height: 100vh;
     display: grid;
@@ -34,6 +45,10 @@ button {
     grid-template: 1fr 60px / 1fr;  
 }
 
+.Rules {
+    overflow: auto;
+}
+
 .canvasContainer {
     background-color: blue;
     color: white;    
@@ -42,12 +57,7 @@ button {
     align-items: center;
 }
 
-canvas {
-    background-color: white;
-    image-rendering: pixelated;
-    width: 400px;
-    height: 400px;
-}
+
 
 .active {
     background-color: grey;

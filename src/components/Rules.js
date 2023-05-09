@@ -3,8 +3,13 @@ import {useState} from 'react';
 function Rules(props) {
     return (
         <div className="Main" style={{display: props.style}}>
-            <div> 
-
+            <div className='Rules'> 
+                <ul>
+                    {props.rules.map((data, index) => {
+                        const canvas = <canvas></canvas>
+                        return <li key={index} >{canvas}</li>
+                    })}
+                </ul>
             </div>
             <div className="Bottom"> 
                 <input placeholder={3} onChange={(e) => {props.setSettings({...props.settings, "x" : +e.target.value})}}/>
