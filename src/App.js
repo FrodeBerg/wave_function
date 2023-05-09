@@ -1,23 +1,30 @@
 import './App.css';
 import Canvas from './components/Canvas'
 import Rules from './components/Rules'
-import {React, useState} from 'react';
+import generateRules from './components/GenerateRules';
+import {React, useState, useEffect} from 'react';
 
 function App() {
   const [page, setPage] = useState("canvas")
-  const [canvasData, setCanvasData] = useState([])
+  const [canvasData, setCanvasData] = useState({})
+  const [rules, setRules] = useState([])
   const [ruleSettings, setruleSettings] = useState({
     "x": 3,
     "y": 3,
     "rotation": false, 
   })
-  console.log(ruleSettings)
+
+  useEffect(() => {
+    setRules(generateRules(canvasData, ruleSettings))
+  }, [ruleSettings, canvasData])
 
   return (
     <div className="App">
       <Side page={page} setPage={setPage}/> 
       <Canvas style={page === "canvas" ? "" : "none"} setCanvasData={setCanvasData}/> 
-      <Rules style={page === "rules" ? "" : "none"} settings={ruleSettings} setSettings={setruleSettings} /> 
+      <Rules style={page === "rules" ? "" : "none"} 
+      settings={ruleSettings} setSettings={setruleSettings} 
+      rules={rules}/> 
       <div style={{display : page === "play" ? "" : "none"}} /> 
     </div>
   );

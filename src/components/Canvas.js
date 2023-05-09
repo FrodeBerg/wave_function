@@ -2,12 +2,11 @@ import {useState} from 'react';
 
 function Canvas(props) {
     let isPressed = false;
-    let canvasData = null
 
     document.onmousedown = () => isPressed = true
     document.onmouseup = () => {
         isPressed = false
-        props.setCanvasData(canvasData)   
+        getCanvasData(document.getElementById("canvas")) 
     }
 
     const [size, setSize] = useState({"x" : 10, "y" : 10})
@@ -34,13 +33,22 @@ function Canvas(props) {
         let ctx = canvas.getContext("2d");
         ctx.fillStyle = color;
         ctx.fillRect(posX - Math.floor(brushSize / 2), posY - Math.floor(brushSize/ 2), brushSize, brushSize)   
-        canvasData = ctx.getImageData(0,0, canvas.width, canvas.height)
+    }
+
+    function getCanvasData(canvas) {
+        const ctx = canvas.getContext("2d")
+        props.setCanvasData({
+            "data": ctx.getImageData(0,0, canvas.width, canvas.height).data, 
+            "height": canvas.height,
+            "width": canvas.width,
+        })  
     }
 
     return (
         <div className="Main" style={{display: props.style}}>
             <div className='canvasContainer'> 
                 <canvas id="canvas" 
+                onLoad={(e) => getCanvasData(e.target)}
                 onMouseDown={(e) => {paint(e)}} 
                 onMouseMove={(e) => {if (isPressed) paint(e)}} 
                 width={size.x} 
