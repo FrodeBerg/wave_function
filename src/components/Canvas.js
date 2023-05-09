@@ -4,10 +4,8 @@ function Canvas(props) {
     let isPressed = false;
 
     document.onmousedown = () => isPressed = true
-    document.onmouseup = () => {
-        isPressed = false
-        getCanvasData(document.getElementById("canvas")) 
-    }
+    document.onmouseup = () => isPressed = false
+
 
     const [size, setSize] = useState({"x" : 10, "y" : 10})
     const [brushSize, setBrushSize] = useState(1)
@@ -33,15 +31,6 @@ function Canvas(props) {
         let ctx = canvas.getContext("2d");
         ctx.fillStyle = color;
         ctx.fillRect(posX - Math.floor(brushSize / 2), posY - Math.floor(brushSize/ 2), brushSize, brushSize)   
-    }
-
-    function getCanvasData(canvas) {
-        const ctx = canvas.getContext("2d")
-        props.setCanvasData({
-            "data": ctx.getImageData(0,0, canvas.width, canvas.height).data, 
-            "height": canvas.height,
-            "width": canvas.width,
-        })  
     }
 
     return (

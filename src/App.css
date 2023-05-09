@@ -60,6 +60,10 @@ li canvas {
     overflow: auto;
 }
 
+.Collapse {
+    background-color: red;
+}
+
 .canvasContainer {
     background-color: blue;
     color: white;    

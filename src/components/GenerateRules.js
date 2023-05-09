@@ -4,9 +4,7 @@ function generateRules(canvasData, settings) {
 
     const tiles = generateTiles(canvasData, settings)
     const rules = []
-    // generate array of obj
-    //each obj has left, right, up and down '
-    // Each value is an array iether empty or ids to tiles and corresponding rule 
+
     tiles.forEach((tile) => {
         const rule = {"up" : [], "right" : [],  "down" : [], "left" : [],}
         const sides = getSides(tile, settings.x, settings.y)
