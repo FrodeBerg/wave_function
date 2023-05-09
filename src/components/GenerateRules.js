@@ -11,7 +11,7 @@ function generateRules(canvasData, settings) {
                 const pixelRow = canvasData.data.slice(startPixel * valuesPerPixel, (startPixel + settings.x) * valuesPerPixel)
                 newArray.set(pixelRow, matrixRow * valuesPerPixel * settings.x)
             }
-
+            
             rules.push(newArray)
         }
     }

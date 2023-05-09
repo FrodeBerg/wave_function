@@ -17,8 +17,19 @@ canvas {
     height: 400px;
 }
 
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px
+}
+
 li {
     list-style: none;
+}
+
+li canvas {
+    width: 30px;
+    height: 30px;
 }
 
 .App {

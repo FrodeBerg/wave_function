@@ -7,7 +7,7 @@ import {React, useState, useEffect} from 'react';
 function App() {
   const [page, setPage] = useState("canvas")
   const [canvasData, setCanvasData] = useState({})
-  const [rules, setRules] = useState([])
+  const [rules, setRules] = useState({"rules" : [], "settings" : null})
   const [ruleSettings, setruleSettings] = useState({
     "x": 3,
     "y": 3,
@@ -15,7 +15,7 @@ function App() {
   })
 
   useEffect(() => {
-    setRules(generateRules(canvasData, ruleSettings))
+    setRules({"rules" : generateRules(canvasData, ruleSettings), "settings": ruleSettings})
   }, [ruleSettings, canvasData])
 
   return (
