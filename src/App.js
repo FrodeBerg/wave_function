@@ -1,21 +1,28 @@
 import './App.css';
 import Canvas from './components/Canvas'
+import Rules from './components/Rules'
 import {React, useState} from 'react';
 
 function App() {
   const [page, setPage] = useState("canvas")
   const [canvasData, setCanvasData] = useState([])
-  console.log(canvasData)
+  const [ruleSettings, setruleSettings] = useState({
+    "x": 3,
+    "y": 3,
+    "rotation": false, 
+  })
+  console.log(ruleSettings)
+
   return (
     <div className="App">
       <Side page={page} setPage={setPage}/> 
       <Canvas style={page === "canvas" ? "" : "none"} setCanvasData={setCanvasData}/> 
-      <div style={{display : page === "rules" ? "" : "none"}} /> 
+      <Rules style={page === "rules" ? "" : "none"} settings={ruleSettings} setSettings={setruleSettings} /> 
       <div style={{display : page === "play" ? "" : "none"}} /> 
     </div>
   );
 }
- 
+
 function Side(props) {
   return (
     <div className="Side"> 
