@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-function Canvas() {
+function Canvas(props) {
     let isPressed = false;
 
     document.onmousedown = () => isPressed = true
@@ -34,7 +34,7 @@ function Canvas() {
     }
 
     return (
-        <div className="Main">
+        <div className="Main" style={{display: props.style}}>
             <div className='canvasContainer'> 
                 <canvas id="canvas" 
                 onMouseDown={(e) => {paint(e)}} 

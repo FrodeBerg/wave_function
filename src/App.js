@@ -1,21 +1,16 @@
 import './App.css';
 import Canvas from './components/Canvas'
-import {React, useState, useEffect} from 'react';
+import {React, useState} from 'react';
 
 function App() {
   const [page, setPage] = useState("canvas")
-  const [mainPage, setMainPage] = useState(<Canvas />)
-  
-  useEffect(() => {
-    if (page === "canvas")  setMainPage(<Canvas />)
-    if (page === "rules") setMainPage(<div />)
-    if (page === "play") setMainPage(<div />)
-  }, [page]);
 
   return (
     <div className="App">
       <Side page={page} setPage={setPage}/> 
-      {mainPage}
+      <Canvas style={page === "canvas" ? "" : "none"} /> 
+      <div style={{display : page === "rules" ? "" : "none"}} /> 
+      <div style={{display : page === "play" ? "" : "none"}} /> 
     </div>
   );
 }
