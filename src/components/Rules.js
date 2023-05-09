@@ -1,13 +1,22 @@
-import {useState} from 'react';
+import paintCanvas from "./PaintCanvas"
+import {useEffect} from 'react';
+
 
 function Rules(props) {
+
+    useEffect(() => {
+        props.rules.map((data, index) => {
+            let canvas = document.getElementById(`canvas${index}`)
+            paintCanvas(canvas, data, props.settings.x, props.settings.y)
+        })
+    })
+
     return (
         <div className="Main" style={{display: props.style}}>
             <div className='Rules'> 
                 <ul>
                     {props.rules.map((data, index) => {
-                        const canvas = <canvas></canvas>
-                        return <li key={index} >{canvas}</li>
+                        return <li key={index}><canvas width={props.settings.x} height={props.settings.y} id={`canvas${index}`}></canvas></li>
                     })}
                 </ul>
             </div>
@@ -19,5 +28,6 @@ function Rules(props) {
         </div>
     )  
 }
+
 
 export default Rules

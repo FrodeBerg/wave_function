@@ -48,7 +48,6 @@ function Canvas(props) {
         <div className="Main" style={{display: props.style}}>
             <div className='canvasContainer'> 
                 <canvas id="canvas" 
-                onLoad={(e) => getCanvasData(e.target)}
                 onMouseDown={(e) => {paint(e)}} 
                 onMouseMove={(e) => {if (isPressed) paint(e)}} 
                 width={size.x} 
