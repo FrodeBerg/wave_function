@@ -15,7 +15,7 @@ function App() {
     </div>
   );
 }
-
+ 
 function Side(props) {
   return (
     <div className="Side"> 
