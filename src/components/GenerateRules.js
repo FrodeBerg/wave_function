@@ -3,24 +3,7 @@ const valuesPerPixel = 4
 function generateRules(canvasData, settings) {
 
     const tiles = generateTiles(canvasData, settings)
-    const rules = []
-
-    tiles.forEach((tile) => {
-        const rule = {"up" : [], "right" : [],  "down" : [], "left" : [],}
-        const sides = getSides(tile, settings.x, settings.y)
-
-        tiles.forEach((newTile, index) => {
-            const newSides = getSides(newTile, settings.x, settings.y)
-            if (compareSides(sides.left, newSides.right)) rule.left.push(index)
-            if (compareSides(sides.right, newSides.left)) rule.right.push(index)
-            if (compareSides(sides.up, newSides.down)) rule.up.push(index)
-            if (compareSides(sides.down, newSides.up)) rule.down.push(index)
-        })
-
-        rules.push(rule)
-    })
-
-    console.log(rules)
+    const rules = null // generateSideRules(tiles, settings)
 
     return {"tiles" : tiles, "settings" : settings, "rules" : rules}
 }
@@ -57,6 +40,45 @@ function getSides(tile, width, height) {
         }
     }
     return sides
+}
+
+function generateSideRules(tiles, settings) {
+    const rules = []
+    const length = tiles.length
+    for (let i = 0; i < length; i++) {
+        const rule = {"up" : [], "right" : [],  "down" : [], "left" : [],}        
+        rules.push(rule)        
+    }
+
+    for (let i = 0; i < length; i++) {
+        const tile = tiles[i]
+        const sides = getSides(tile, settings.x, settings.y)
+
+        for (let j = i; j < length; j++) {
+            const newTile = tiles[j]
+            const newSides = getSides(newTile, settings.x, settings.y)
+
+            if (compareSides(sides.left, newSides.right)) {
+                rules[i].left.push(j)
+                rules[j].right.push(i)
+
+            }
+            if (compareSides(sides.right, newSides.left)) {
+                rules[i].right.push(j)
+                rules[j].left.push(i)
+            }
+            if (compareSides(sides.up, newSides.down)){
+                rules[i].up.push(j)
+                rules[j].down.push(i)
+            }
+            if (compareSides(sides.down, newSides.up)) {
+                rules[i].down.push(j)
+                rules[j].up.push(i)
+            }
+        }
+    }
+
+    return rules
 }
 
 function generateTiles(canvasData, settings) {
