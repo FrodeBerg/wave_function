@@ -5,7 +5,7 @@ import {useEffect} from 'react';
 function Rules(props) {
 
     useEffect(() => {
-        props.rules.rules.forEach((data, index) => {
+        props.rules.tiles.forEach((data, index) => {
             let canvas = document.getElementById(`canvas${index}`)
             paintCanvas(canvas, data, props.rules.settings.x, props.rules.settings.y)
         })
@@ -15,7 +15,7 @@ function Rules(props) {
         <div className="Main" style={{display: props.style}}>
             <div className='Rules'> 
                 <ul>
-                    {props.rules.rules.map((data, index) => {
+                    {props.rules.tiles.map((data, index) => {
                         return <li key={index}><canvas width={props.settings.x} height={props.settings.y} id={`canvas${index}`}></canvas></li>
                     })}
                 </ul>

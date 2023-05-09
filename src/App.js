@@ -7,7 +7,7 @@ import {React, useState, useEffect} from 'react';
 function App() {
   const [page, setPage] = useState("canvas")
   const [canvasData, setCanvasData] = useState({})
-  const [rules, setRules] = useState({"rules" : [], "settings" : null})
+  const [rules, setRules] = useState({"tiles" : [], "settings" : null})
   const [ruleSettings, setruleSettings] = useState({
     "x": 3,
     "y": 3,
@@ -15,7 +15,7 @@ function App() {
   })
 
   useEffect(() => {
-    setRules({"rules" : generateRules(canvasData, ruleSettings), "settings": ruleSettings})
+    setRules(generateRules(canvasData, ruleSettings))
   }, [ruleSettings, canvasData])
 
   return (
@@ -25,7 +25,7 @@ function App() {
       <Rules style={page === "rules" ? "" : "none"} 
       settings={ruleSettings} setSettings={setruleSettings} 
       rules={rules}/> 
-      <div style={{display : page === "play" ? "" : "none"}} /> 
+      <div style={{display : page === "collapse" ? "" : "none"}} /> 
     </div>
   );
 }
@@ -35,7 +35,7 @@ function Side(props) {
     <div className="Side"> 
       <button onClick={() => props.setPage("canvas")} className={props.page === "canvas" ? "active" : ""}>Canvas</button>
       <button onClick={() => props.setPage("rules")} className={props.page === "rules" ? "active" : ""}>Rules</button>
-      <button onClick={() => props.setPage("play")} className={props.page === "play" ? "active" : ""}>Play</button>
+      <button onClick={() => props.setPage("collapse")} className={props.page === "collapse" ? "active" : ""}>Collapse</button>
     </div>
   )
 }

@@ -1,7 +1,14 @@
 function generateRules(canvasData, settings) {
+    
+    const tiles = generateTiles(canvasData, settings)
+
+    return {"tiles" : tiles, "settings": settings}
+}
+
+function generateTiles(canvasData, settings) {
 
     const valuesPerPixel = 4
-    const rules = []
+    const tiles = []
     for (let row = 0; row <= canvasData.height - settings.x; row++){
         for (let column = 0; column <= canvasData.width - settings.y; column++) {
 
@@ -12,11 +19,11 @@ function generateRules(canvasData, settings) {
                 newArray.set(pixelRow, matrixRow * valuesPerPixel * settings.x)
             }
             
-            rules.push(newArray)
+            tiles.push(newArray)
         }
     }
 
-    return rules
+    return tiles
 }
 
 export default generateRules
