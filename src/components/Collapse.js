@@ -13,13 +13,20 @@ function Collapse(props) {
         height = 800 / ratio
     }
 
+    function collapse(e) {
+        console.log(e)
+
+    }
+
     return (
         <div className="Main" style={{display: props.style}}>
             <div className='canvasContainer'> 
                 <canvas 
                 width={settings.x} 
                 height={settings.y} 
-                style={{"width": width,"height" : height}}>
+                style={{"width": width,"height" : height}}
+                onClick={e => collapse(e)}>
+                
                 </canvas>
             </div>
             <div className="Bottom"> 
@@ -29,6 +36,10 @@ function Collapse(props) {
             </div>       
         </div>
     )  
+}
+
+function chooseRandom(array) {
+    return array[Math.floor(Math.random() * array.length)]
 }
 
 export default Collapse

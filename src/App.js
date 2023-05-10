@@ -15,6 +15,8 @@ function App() {
     "rotation": false, 
   })
 
+
+
   useEffect(() => {
     setRules(generateRules(canvasData, ruleSettings))
   }, [ruleSettings, canvasData])
