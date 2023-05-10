@@ -1,44 +1,28 @@
-const valuesPerPixel = 4
-
 function generateRules(canvasData, settings) {
 
-    const [tiles, frequency] = generateTiles(canvasData, settings)
-    const rules = generateSideRules(tiles, settings)
-    console.log(rules)
-    return {"tiles" : tiles, "settings" : settings, "rules" : rules, "frequency" : frequency}
-}
-
-function geTilePosition(tileArray, tile) {
-
-    for (let i = 0; i < tileArray.length; i++) {
-        let compareTile = tileArray[i]
-        let unique = false
-        for (let j = 0; j < compareTile.length; j++) {
-            if (tile[j] !== compareTile[j]) {
-            unique = true
-            break
-        }
-        }
-        if (!unique) return i
-    }
-    return -1
-}
-
-function generateTiles(canvasData, settings) {
     const tiles = []
+    const sides = {"up" : {}, "right" : {}, "down" : {}, "left" : {}}
     const frequency = []
+
+    function getKey(object, key, returnValue = []) {
+        if (object.hasOwnProperty(key)) return object[key]
+        return returnValue 
+    }
+
     for (let row = 0; row <= canvasData.height - settings.x; row++){
         for (let column = 0; column <= canvasData.width - settings.y; column++) {
 
-            let newTile = new Uint8ClampedArray(settings.y * settings.x * valuesPerPixel)
-            for (let matrixRow = 0; matrixRow < settings.y; matrixRow++) {
-                const pixelStart = (column + (matrixRow + row) * canvasData.width) 
-                const pixelRow = canvasData.data.slice(pixelStart * valuesPerPixel, (pixelStart + settings.x) * valuesPerPixel)
-                newTile.set(pixelRow, matrixRow * valuesPerPixel * settings.x)
-            }
+            const start = column + row * canvasData.width
+            const newTile = generateTile(canvasData.data, start, canvasData.width, settings.x, settings.y)
             
-            const tilePosition = geTilePosition(tiles, newTile)
+            const tilePosition = getTilePosition(tiles, newTile[0])
             if (tilePosition === -1) {
+
+                sides.up[newTile[0][0]] = [frequency.length].concat(getKey(sides.up, newTile[0][0]))
+                sides.down[newTile[0][newTile[0].length - 1]] = [frequency.length].concat(getKey(sides.down, newTile[0][newTile[0].length - 1]))
+                sides.left[newTile[1][0]] = [frequency.length].concat(getKey(sides.left, newTile[1][0]))
+                sides.right[newTile[1][newTile[1].length - 1]] = [frequency.length].concat(getKey(sides.right, newTile[1][newTile[1].length - 1]))
+
                 frequency.push(1)
                 tiles.push(newTile)
             } 
@@ -47,81 +31,53 @@ function generateTiles(canvasData, settings) {
             }
         }
     }
-
-    return [tiles, frequency]
+    console.log(sides)
+    return {"tiles" : tiles, "settings" : settings, "sides" : sides, "frequency" : frequency}
 }
 
-function compareSides(side, oppositeSide) {
+function generateTile(data, start, canvasWidth, tileWidth, tileHeight) {
 
-    if (side.byteLength !== oppositeSide.byteLength) return false;
+    const valuesPerPixel = 4
+    const rows = []
+    const columns = []
 
-    for (var i = 0 ; i !== side.byteLength ; i++)
-    {
-        if (side[i] !== oppositeSide[i]) return false;
-    }
-    return true;
-}
-
-function getSides(tile, width, height) {
-    let length = width * height * valuesPerPixel
-
-    const sides = {
-        "up" : new Uint8ClampedArray(length), 
-        "right" : new Uint8ClampedArray(length),  
-        "down" : new Uint8ClampedArray(length), 
-        "left" : new Uint8ClampedArray(length),
+    for (let rowNumber = 0; rowNumber < tileHeight; rowNumber++) {
+        const rowStart = (start + canvasWidth * rowNumber) * valuesPerPixel
+        const row = data.slice(rowStart, rowStart + tileWidth * valuesPerPixel)
+        const tileRow = new Uint8ClampedArray(row)
+        rows.push(tileRow)
     }
 
-    for (let row = 0; row < height; row++) {
-        for (let column = 0; column < width; column++) {
-            const pixelStart = (column + row * width) * valuesPerPixel
-            const pixel = tile.slice(pixelStart, pixelStart + valuesPerPixel)
-            if (row === 0) sides.up.set(pixel, column * valuesPerPixel)
-            if (column === 2) sides.right.set(pixel, row * valuesPerPixel)
-            if (row === 2) sides.down.set(pixel, column * valuesPerPixel)
-            if (column === 0) sides.left.set(pixel, row * valuesPerPixel)  
+    for (let columnNumber = 0; columnNumber < tileWidth; columnNumber++){
+        const newColumn = new Uint8ClampedArray(tileHeight * valuesPerPixel)
+        for (let rowNumber = 0; rowNumber < tileHeight; rowNumber++) {
+            const rowValue = rows[rowNumber].slice(columnNumber * valuesPerPixel, columnNumber * valuesPerPixel + valuesPerPixel)
+            newColumn.set(rowValue, rowNumber * valuesPerPixel)
         }
+        columns.push(newColumn)
     }
-    return sides
+    
+    return [rows, columns]
 }
 
-function generateSideRules(tiles, settings) {
-    const rules = []
-    const length = tiles.length
-    for (let i = 0; i < length; i++) {
-        const rule = {"up" : [], "right" : [],  "down" : [], "left" : [],}        
-        rules.push(rule)        
-    }
+function getTilePosition(tileArray, tile) {
 
-    for (let i = 0; i < length; i++) {
-        const tile = tiles[i]
-        const sides = getSides(tile, settings.x, settings.y)
+    for (let i = 0; i < tileArray.length; i++) {
 
-        for (let j = i; j < length; j++) {
-            const newTile = tiles[j]
-            const newSides = getSides(newTile, settings.x, settings.y)
+        let compareTile = tileArray[i][0]
+        let unique = false
 
-            if (compareSides(sides.left, newSides.right)) {
-                rules[i].left.push(j)
-                rules[j].right.push(i)
-
-            }
-            if (compareSides(sides.right, newSides.left)) {
-                rules[i].right.push(j)
-                rules[j].left.push(i)
-            }
-            if (compareSides(sides.up, newSides.down)){
-                rules[i].up.push(j)
-                rules[j].down.push(i)
-            }
-            if (compareSides(sides.down, newSides.up)) {
-                rules[i].down.push(j)
-                rules[j].up.push(i)
-            }
+        for (let row = 0; row < compareTile.length; row++){
+            for (let j = 0; j < compareTile[row].length; j++) {
+                if (tile[row][j] !== compareTile[row][j]) {
+                    unique = true
+                    break
+                }
+            } 
         }
+        if (!unique) return i   
     }
-
-    return rules
+    return -1
 }
 
 export default generateRules
