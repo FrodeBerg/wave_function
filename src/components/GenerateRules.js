@@ -2,13 +2,13 @@ const valuesPerPixel = 4
 
 function generateRules(canvasData, settings) {
 
-    const tiles = generateTiles(canvasData, settings)
+    const [tiles, frequency] = generateTiles(canvasData, settings)
     const rules = null
     console.log(rules)
-    return {"tiles" : tiles, "settings" : settings, "rules" : rules}
+    return {"tiles" : tiles, "settings" : settings, "rules" : rules, "frequency" : frequency}
 }
 
-function isUniqueTile(tileArray, tile) {
+function geTilePosition(tileArray, tile) {
 
     for (let i = 0; i < tileArray.length; i++) {
         let compareTile = tileArray[i]
@@ -19,13 +19,14 @@ function isUniqueTile(tileArray, tile) {
             break
         }
         }
-        if (!unique) return false
+        if (!unique) return i
     }
-    return true
+    return -1
 }
 
 function generateTiles(canvasData, settings) {
     const tiles = []
+    const frequency = []
     for (let row = 0; row <= canvasData.height - settings.x; row++){
         for (let column = 0; column <= canvasData.width - settings.y; column++) {
 
@@ -36,11 +37,18 @@ function generateTiles(canvasData, settings) {
                 newTile.set(pixelRow, matrixRow * valuesPerPixel * settings.x)
             }
             
-            if (isUniqueTile(tiles, newTile)) tiles.push(newTile)
+            const tilePosition = geTilePosition(tiles, newTile)
+            if (tilePosition === -1) {
+                frequency.push(1)
+                tiles.push(newTile)
+            } 
+            else {
+                frequency[tilePosition] += 1
+            }
         }
     }
 
-    return tiles
+    return [tiles, frequency]
 }
 
 export default generateRules

@@ -16,8 +16,12 @@ function Rules(props) {
             <div className='Rules'> 
                 <ul>
                     {props.rules.tiles.map((data, index) => {
-                        return <li key={index}><canvas width={props.settings.x} height={props.settings.y} id={`canvas${index}`}></canvas></li>
-                    })}
+                        return (
+                        <li key={index}>
+                            <canvas width={props.settings.x} height={props.settings.y} id={`canvas${index}`}></canvas>
+                            <h5>{props.rules.frequency[index]}</h5>
+                        </li>
+                    )})}
                 </ul>
             </div>
             <div className="Bottom"> 
