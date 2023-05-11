@@ -1,35 +1,74 @@
-function generateRules(canvasData, settings) {
+import paintCanvas from "./PaintCanvas"
 
+function generateRules(canvasData, settings, setRules) {
+
+    const ruleConatiner = document.getElementById("ruleContainer")
+    ruleConatiner.innerHTML = ""
     const tiles = []
     const sides = {"up" : {}, "right" : {}, "down" : {}, "left" : {}}
     const frequency = []
 
+    function generateSides(tile) {
+        const index = frequency.length - 1
+        const rows = tile[0]
+        const columns = tile[1]
 
+        sides.up[rows[0]] = [index].concat(getKey(sides.up, rows[0]))
+        sides.down[rows[settings.y - 1]] = [index].concat(getKey(sides.down, rows[settings.y - 1]))
+        sides.left[columns[0]] = [index].concat(getKey(sides.left, columns[0]))
+        sides.right[columns[settings.x - 1]] = [index].concat(getKey(sides.right, columns[settings.x - 1]))        
+    }
 
-    for (let row = 0; row <= canvasData.height - settings.x; row++){
-        for (let column = 0; column <= canvasData.width - settings.y; column++) {
+    function createCanvas(){
+        const canvas = document.createElement("canvas")
+        const canvasContainer = document.createElement("div")
+        const frequencyText = document.createElement("h5")
 
+        frequencyText.innerHTML = 1
+        canvas.width = settings.x
+        canvas.height = settings.y
+        canvasContainer.append(canvas)
+        canvasContainer.append(frequencyText)
+        ruleConatiner.append(canvasContainer) 
+
+        return canvas    
+    }
+
+    function forLoopRow(row) {
+        for (let column = 0; column < canvasData.width - settings.y; column++) {
             const start = column + row * canvasData.width
             const newTile = generateTile(canvasData.data, start, canvasData.width, settings.x, settings.y)
             
             const tilePosition = getTilePosition(tiles, newTile[0])
             if (tilePosition === -1) {
 
-                sides.up[newTile[0][0]] = [frequency.length].concat(getKey(sides.up, newTile[0][0]))
-                sides.down[newTile[0][newTile[0].length - 1]] = [frequency.length].concat(getKey(sides.down, newTile[0][newTile[0].length - 1]))
-                sides.left[newTile[1][0]] = [frequency.length].concat(getKey(sides.left, newTile[1][0]))
-                sides.right[newTile[1][newTile[1].length - 1]] = [frequency.length].concat(getKey(sides.right, newTile[1][newTile[1].length - 1]))
+                generateSides(newTile)
+                const canvas = createCanvas()
+                paintCanvas(canvas, newTile)
 
                 frequency.push(1)
                 tiles.push(newTile)
             } 
             else {
+                const frequencyText = ruleConatiner.children[tilePosition].children[1]
+                
+                frequencyText.innerHTML = +frequencyText.innerHTML + 1
                 frequency[tilePosition] += 1
-            }
+            }                
+        }
+
+        row++
+        if (row <= canvasData.height - settings.x){
+            setTimeout(function(){
+                forLoopRow(row)
+            }, 1);                
+        } else {
+            // end point
+
+            setRules({"tiles" : tiles, "settings" : settings, "sides" : sides, "frequency" : frequency})
         }
     }
-    console.log(sides)
-    return {"tiles" : tiles, "settings" : settings, "sides" : sides, "frequency" : frequency}
+   forLoopRow(0)
 }
 
 function getKey(object, key, returnValue = []) {

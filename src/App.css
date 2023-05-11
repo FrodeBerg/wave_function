@@ -17,17 +17,15 @@ canvas {
     height: 400px;
 }
 
-ul {
+#ruleContainer {
+    margin: 20px;
     display: flex;
     flex-wrap: wrap;
-    gap: 15px
+    gap: 15px;
+    overflow: auto;
 }
 
-li {
-    list-style: none;
-}
-
-li canvas {
+#ruleContainer canvas {
     width: 30px;
     height: 30px;
 }

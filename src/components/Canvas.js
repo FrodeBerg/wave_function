@@ -31,6 +31,7 @@ function Canvas(props) {
         let ctx = canvas.getContext("2d");
         ctx.fillStyle = color;
         ctx.fillRect(posX - Math.floor(brushSize / 2), posY - Math.floor(brushSize/ 2), brushSize, brushSize)   
+        props.setHasChanged(true)
     }
 
     return (
