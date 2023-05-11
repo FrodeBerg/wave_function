@@ -4,10 +4,7 @@ function generateRules(canvasData, settings) {
     const sides = {"up" : {}, "right" : {}, "down" : {}, "left" : {}}
     const frequency = []
 
-    function getKey(object, key, returnValue = []) {
-        if (object.hasOwnProperty(key)) return object[key]
-        return returnValue 
-    }
+
 
     for (let row = 0; row <= canvasData.height - settings.x; row++){
         for (let column = 0; column <= canvasData.width - settings.y; column++) {
@@ -33,6 +30,11 @@ function generateRules(canvasData, settings) {
     }
     console.log(sides)
     return {"tiles" : tiles, "settings" : settings, "sides" : sides, "frequency" : frequency}
+}
+
+function getKey(object, key, returnValue = []) {
+    if (object.hasOwnProperty(key)) return object[key]
+    return returnValue 
 }
 
 function generateTile(data, start, canvasWidth, tileWidth, tileHeight) {
