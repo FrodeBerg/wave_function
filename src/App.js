@@ -6,7 +6,7 @@ import {React, useState, useEffect} from 'react';
 
 function App() {
   const [page, setPage] = useState("canvas")
-  const [rules, setRules] = useState({"tiles" : [], "settings" : null})
+  const [rules, setRules] = useState({})
   const [hasChanged, setHasChanged] = useState(true)
 
   return (

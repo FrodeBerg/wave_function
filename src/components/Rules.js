@@ -4,25 +4,21 @@ import {useState, useEffect} from 'react';
 
 
 function Rules(props) {
+    const [update, toggleUpdate] = useState(0)
     const [settings, setSettings] = useState({
         "x": 3,
         "y": 3,
         "rotation": false, 
     })
 
-
+    useEffect(() => {
+        if (props.page !== "canvas" && props.hasChanged) {
+            props.setHasChanged(false)
+        }
+    }, [props.hasChanged, props.page])
 
     useEffect(() => {
-        
-        const canvas = document.getElementById("canvas")
-        const ctx = canvas.getContext("2d")
-        const tiles = []
-        const rules = {
-            "sides" : {"up" : {}, "left" : {}, "right" : {}, "down" : {}},
-            "tiles" : []
-        }
-        const frequency = []
-
+        if (props.hasChanged) return
         // Timeout after each row to let ui update
         function rowLoop(row) {
 
@@ -33,8 +29,8 @@ function Rules(props) {
                 generateRules(tile, tiles, rules, frequency)
 
             }
-            row++
-            
+
+            row++   
             if (row > canvas.height - settings.x) {
                 console.log("finis")
                 console.log(rules)
@@ -45,9 +41,19 @@ function Rules(props) {
             setTimeout(() => {rowLoop(row)}, 1);                
         }
 
+        const canvas = document.getElementById("canvas")
+        const ctx = canvas.getContext("2d")
+        const tiles = []
+        const rules = {
+            "sides" : {"up" : {}, "left" : {}, "right" : {}, "down" : {}},
+            "tiles" : []
+        }
+        const frequency = []
+
+        document.getElementById("ruleContainer").innerHTML = ""
         rowLoop(0)
 
-    }, [settings, props.page, props.hasChanged])
+    }, [settings, props.hasChanged])
 
     return (
         <div className="Main" style={{display: props.style}}>
