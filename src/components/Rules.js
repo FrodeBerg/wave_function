@@ -1,36 +1,53 @@
 import generateRules from './GenerateRules';
 
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect} from 'react';
 
 
 function Rules(props) {
-    const [ruleSettings, setRuleSettings] = useState({
+    const [settings, setSettings] = useState({
         "x": 3,
         "y": 3,
         "rotation": false, 
     })
-    let previousSettings = useRef(ruleSettings)
+
+
 
     useEffect(() => {
         
         const canvas = document.getElementById("canvas")
         const ctx = canvas.getContext("2d")
-        const canvasData = {
-            "data": ctx.getImageData(0,0, canvas.width, canvas.height).data, 
-            "height": canvas.height,
-            "width": canvas.width,
-        }  
-
-        if (props.page !== "canvas" && props.hasChanged) {
-            generateRules(canvasData, ruleSettings, props.setRules)  
-            props.setHasChanged(false)
+        const tiles = []
+        const rules = {
+            "sides" : {"up" : {}, "left" : {}, "right" : {}, "down" : {}},
+            "tiles" : []
         }
-        if (!compareObjects(previousSettings.current, ruleSettings)) {
-            generateRules(canvasData, ruleSettings, props.setRules)  
-            previousSettings.current = ruleSettings
+        const frequency = []
+
+        // Timeout after each row to let ui update
+        function rowLoop(row) {
+
+            for (let column = 0; column <= canvas.width - settings.y; column++) {
+
+                const tile = ctx.getImageData(column, row, settings.x, settings.y)
+
+                generateRules(tile, tiles, rules, frequency)
+
+            }
+            row++
+            
+            if (row > canvas.height - settings.x) {
+                console.log("finis")
+                console.log(rules)
+                // end point 
+                props.setRules({"tiles" : tiles, "rules" : rules, "frequency" : frequency})
+                return
+            }
+            setTimeout(() => {rowLoop(row)}, 1);                
         }
 
-    }, [ruleSettings, props.page, props.hasChanged])
+        rowLoop(0)
+
+    }, [settings, props.page, props.hasChanged])
 
     return (
         <div className="Main" style={{display: props.style}}>
@@ -38,22 +55,12 @@ function Rules(props) {
 
             </div>
             <div className="Bottom"> 
-                <input placeholder={3} onChange={(e) => {setRuleSettings({...ruleSettings, "x" : +e.target.value}); }}/>
-                <input placeholder={3} onChange={(e) => {setRuleSettings({...ruleSettings, "y" : +e.target.value})}}/>
-                <input placeholder={1} type={"checkbox"} onChange={(e) => {setRuleSettings({ruleSettings, "rotation": e.target.checked})}}/>
+                <input placeholder={3} onChange={(e) => {setSettings({...settings, "x" : +e.target.value}); }}/>
+                <input placeholder={3} onChange={(e) => {setSettings({...settings, "y" : +e.target.value})}}/>
+                <input placeholder={1} type={"checkbox"} onChange={(e) => {setSettings({settings, "rotation": e.target.checked})}}/>
             </div>       
         </div>
     )  
-}
-
-function compareObjects(object1, object2) {
-    
-    const keys = Object.keys(object1)
-    for (let i = 0; i < keys.length; i++) {
-        if (object1[keys[i]] !== object2[keys[i]]) return false
-    }
-
-    return true
 }
 
 export default Rules
