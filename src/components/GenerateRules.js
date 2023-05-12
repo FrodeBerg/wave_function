@@ -13,8 +13,11 @@ function generateRules(tile, tiles, rules, frequenzy) {
         addToDOM(tile)
     } else {
         frequenzy[isNewTile] += 1
-        const frequencyText = document.getElementById("ruleContainer").children[isNewTile].children[1]
-        frequencyText.innerHTML = +frequencyText.innerHTML + 1
+        const frequencyText = document.getElementById("ruleContainer").children[isNewTile]
+        if (frequencyText) {
+            const text = frequencyText.children[1]
+            text.innerHTML = +text.innerHTML + 1
+        }
     }
 }
 
@@ -69,7 +72,7 @@ function generateSides(tile) {
 
             const rowStart = row * width
             if (!column) sides.left.set(data.slice(rowStart, rowStart + valuesPerPixel), row * valuesPerPixel) 
-            if (column = width - 1) sides.right.set(data.slice(rowStart + width - valuesPerPixel, rowStart + width), row * valuesPerPixel)
+            if (column === width - 1) sides.right.set(data.slice(rowStart + width - valuesPerPixel, rowStart + width), row * valuesPerPixel)
         }
     }
 

@@ -1,59 +1,78 @@
 import generateRules from './GenerateRules';
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
 
 function Rules(props) {
-    const [update, toggleUpdate] = useState(0)
+    const isRunning = useRef(false)
+    const stopRunning = useRef(false)
     const [settings, setSettings] = useState({
         "x": 3,
         "y": 3,
         "rotation": false, 
     })
 
-    useEffect(() => {
-        if (props.page !== "canvas" && props.hasChanged) {
-            props.setHasChanged(false)
-        }
-    }, [props.hasChanged, props.page])
+    const hasChanged = props.hasChanged
+    const page = props.page
+    const setHasChanged = props.setHasChanged
+    const setRules = props.setRules
 
     useEffect(() => {
-        if (props.hasChanged) return
+        if (page !== "canvas" && hasChanged) setHasChanged(false)
+    }, [hasChanged, page, setHasChanged])
+
+    useEffect(() => {
+        stopRunning.current = true
+
+        if (hasChanged) return
         // Timeout after each row to let ui update
-        function rowLoop(row) {
+        function rowLoop(rules, ctx, tiles = [], frequency = [], row = 0) {
 
             for (let column = 0; column <= canvas.width - settings.y; column++) {
-
+                if (stopRunning.current) {
+                    isRunning.current = false
+                    return
+                }
                 const tile = ctx.getImageData(column, row, settings.x, settings.y)
 
                 generateRules(tile, tiles, rules, frequency)
-
             }
 
             row++   
             if (row > canvas.height - settings.x) {
                 console.log("finis")
-                console.log(rules)
+
+                isRunning.current = false
                 // end point 
-                props.setRules({"tiles" : tiles, "rules" : rules, "frequency" : frequency})
-                return
+                console.log(rules)
+                return {"tiles" : tiles, "rules" : rules, "frequency" : frequency}
             }
-            setTimeout(() => {rowLoop(row)}, 1);                
+            setTimeout(() => {return rowLoop(rules, ctx, tiles, frequency, row)}, 0);                
         }
 
         const canvas = document.getElementById("canvas")
         const ctx = canvas.getContext("2d")
-        const tiles = []
-        const rules = {
-            "sides" : {"up" : {}, "left" : {}, "right" : {}, "down" : {}},
-            "tiles" : []
+
+        function wait() {
+
+            if (!isRunning.current) {
+                console.log("starting!")
+                stopRunning.current = false
+
+                document.getElementById("ruleContainer").innerHTML = ""
+
+                setRules(rowLoop({"sides" : {"up" : {}, "left" : {}, "right" : {}, "down" : {}}, "tiles" : []}, ctx))
+                isRunning.current = true      
+                         
+            } else {
+                setTimeout(() => {
+                    wait()
+                }, 100);                 
+            }
         }
-        const frequency = []
+        wait()
 
-        document.getElementById("ruleContainer").innerHTML = ""
-        rowLoop(0)
-
-    }, [settings, props.hasChanged])
+    }, [settings, hasChanged, setRules])
 
     return (
         <div className="Main" style={{display: props.style}}>
