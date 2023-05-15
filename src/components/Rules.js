@@ -45,9 +45,11 @@ function Rules(props) {
                 isRunning.current = false
                 // end point 
                 console.log(rules)
-                return {"tiles" : tiles, "rules" : rules, "frequency" : frequency}
+                setRules({"tiles" : tiles, "rules" : rules, "frequency" : frequency, "width" : settings.x, "height" : settings.y})
+
+                return
             }
-            setTimeout(() => {return rowLoop(rules, ctx, tiles, frequency, row)}, 0);                
+            setTimeout(() => {rowLoop(rules, ctx, tiles, frequency, row)}, 0);                
         }
 
         const canvas = document.getElementById("canvas")
@@ -61,7 +63,7 @@ function Rules(props) {
 
                 document.getElementById("ruleContainer").innerHTML = ""
 
-                setRules(rowLoop({"sides" : {"up" : {}, "left" : {}, "right" : {}, "down" : {}}, "tiles" : []}, ctx))
+                rowLoop({"sides" : {"up" : {}, "left" : {}, "right" : {}, "down" : {}}, "tiles" : []}, ctx)
                 isRunning.current = true      
                          
             } else {

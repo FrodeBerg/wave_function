@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import { scaleCanvas } from './helperFunctions';
+import { scaleCanvas, getRelativeMousePosition } from './helperFunctions';
 
 function Canvas(props) {
     let isPressed = false;
@@ -12,13 +12,10 @@ function Canvas(props) {
     const [color, setColor] = useState("#000000")
 
     function paint(e) {
-        const canvas = document.getElementById("canvas")    
         if (e.target.id !== "canvas") return
+        const canvas = e.target
 
-        let rect = e.target.getBoundingClientRect();
-
-        let posX = Math.floor((e.clientX - rect.left) / canvas.offsetWidth * canvas.width);
-        let posY = Math.floor((e.clientY - rect.top) / canvas.offsetHeight * canvas.height);
+        let [posX, posY] = getRelativeMousePosition(e)
         let ctx = canvas.getContext("2d");
         ctx.fillStyle = color;
         ctx.fillRect(posX - Math.floor(brushSize / 2), posY - Math.floor(brushSize/ 2), brushSize, brushSize)   

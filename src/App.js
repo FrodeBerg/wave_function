@@ -9,12 +9,13 @@ function App() {
   const [rules, setRules] = useState({})
   const [hasChanged, setHasChanged] = useState(true)
 
+
   return (
     <div className="App">
       <Side page={page} setPage={setPage}/> 
       <Canvas style={page === "canvas" ? "" : "none"} setHasChanged={setHasChanged}/> 
       <Rules style={page === "rules" ? "" : "none"} 
-      setRules={setRules} rules={rules} 
+      setRules={setRules} 
       page={page}
       hasChanged={hasChanged}
       setHasChanged={setHasChanged}

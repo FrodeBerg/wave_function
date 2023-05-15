@@ -51,3 +51,14 @@ export function scaleCanvas(x, y) {
 
     return {"width": width,"height" : height}
 }
+
+export function getRelativeMousePosition(e) {
+    const canvas = e.target
+    const rect = canvas.getBoundingClientRect();
+
+    const positionX = Math.floor((e.clientX - rect.left) / canvas.offsetWidth * canvas.width);
+    const positionY = Math.floor((e.clientY - rect.top) / canvas.offsetHeight * canvas.height);
+
+    return [positionX, positionY]
+
+}

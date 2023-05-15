@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react"
-import { scaleCanvas, averageColor } from "./helperFunctions"
+import { scaleCanvas, averageColor, getRelativeMousePosition } from "./helperFunctions"
 
 function Collapse(props) {
     
@@ -8,13 +8,24 @@ function Collapse(props) {
     function collapse(e) {
         console.log(e)
 
+        if (e.target.id !== "output") return
+        const [positionX, positionY] = getRelativeMousePosition(e)
+        const canvas = e.target
+        const ctx = canvas.getContext("2d")
+        console.log(props.rules.tiles[0])
+        const tile = props.rules.tiles[0]
+        const imageData = new ImageData(tile, props.rules.width, props.rules.height)
+
+        ctx.putImageData(imageData, positionX, positionY)
+        console.log(positionX, positionY)
+
     }
 
     useEffect(() => {
 
         let canvas = document.getElementById("canvas")
         let ctx = canvas.getContext("2d")
-        let collpasedCanvas = document.getElementById("collapsedCanvas")
+        let collpasedCanvas = document.getElementById("output")
         let collapsedCtx = collpasedCanvas.getContext("2d")
     
 
@@ -23,15 +34,13 @@ function Collapse(props) {
         collapsedCtx.fillStyle = color
         collapsedCtx.fillRect(0, 0, collpasedCanvas.width, collpasedCanvas.height)
         
-
-
     }, [props.page])
 
     return (
         <div className="Main" style={{display: props.style}}>
             <div className='canvasContainer'> 
                 <canvas 
-                id="collapsedCanvas"
+                id="output"
                 width={settings.x} 
                 height={settings.y} 
                 style={scaleCanvas(settings.x, settings.y)}
@@ -47,7 +56,7 @@ function Collapse(props) {
     )  
 }
 
-function chooseRandom(array) {
+function chooseRandom(array, frequency) {
     return array[Math.floor(Math.random() * array.length)]
 }
 
