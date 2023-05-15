@@ -1,4 +1,4 @@
-import paintCanvas from "./PaintCanvas"
+import {paintCanvas} from "./helperFunctions"
 
 function generateRules(tile, tiles, rules, frequenzy) {
     const isNewTile = getTilePosition(tiles, tile.data)

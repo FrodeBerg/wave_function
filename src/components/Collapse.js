@@ -1,17 +1,9 @@
 import { React, useState } from "react"
+import { scaleCanvas } from "./helperFunctions"
 
 function Collapse(props) {
     
     const [settings, setSettings] = useState({"x" : 100, "y" : 100})
-
-    let ratio = settings.x / settings.y
-    let height = 400
-    let width = 400 * ratio;
-
-    if (ratio > 2) { 
-        width = 800
-        height = 800 / ratio
-    }
 
     function collapse(e) {
         console.log(e)
@@ -24,7 +16,7 @@ function Collapse(props) {
                 <canvas 
                 width={settings.x} 
                 height={settings.y} 
-                style={{"width": width,"height" : height}}
+                style={scaleCanvas(settings.x, settings.y)}
                 onClick={e => collapse(e)}>
                 
                 </canvas>

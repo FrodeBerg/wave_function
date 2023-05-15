@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import { scaleCanvas } from './helperFunctions';
 
 function Canvas(props) {
     let isPressed = false;
@@ -6,19 +7,9 @@ function Canvas(props) {
     document.onmousedown = () => isPressed = true
     document.onmouseup = () => isPressed = false
 
-
     const [size, setSize] = useState({"x" : 10, "y" : 10})
     const [brushSize, setBrushSize] = useState(1)
     const [color, setColor] = useState("#000000")
-
-    let ratio = size.x / size.y
-    let height = 400
-    let width = 400 * ratio;
-
-    if (ratio > 2) { 
-        width = 800
-        height = 800 / ratio
-    }
 
     function paint(e) {
         const canvas = document.getElementById("canvas")    
@@ -42,7 +33,7 @@ function Canvas(props) {
                 onMouseMove={(e) => {if (isPressed) paint(e)}} 
                 width={size.x} 
                 height={size.y}
-                style={{"width": width,"height" : height}}>
+                style={scaleCanvas(size.x, size.y)}>
                 </canvas>
             </div>
             <div className="Bottom"> 
