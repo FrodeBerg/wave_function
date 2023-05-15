@@ -40,11 +40,9 @@ function Rules(props) {
 
             row++   
             if (row > canvas.height - settings.x) {
-                console.log("finis")
 
                 isRunning.current = false
                 // end point 
-                console.log(rules)
                 setRules({"tiles" : tiles, "rules" : rules, "frequency" : frequency, "width" : settings.x, "height" : settings.y})
 
                 return
@@ -58,7 +56,6 @@ function Rules(props) {
         function wait() {
 
             if (!isRunning.current) {
-                console.log("starting!")
                 stopRunning.current = false
 
                 document.getElementById("ruleContainer").innerHTML = ""

@@ -14,9 +14,6 @@ function Collapse(props) {
         const tile = props.rules.tiles[0]
 
         paintCanvas(canvas, tile, positionX, positionY, props.rules.width, props.rules.height)
-
-        console.log(positionX, positionY)
-
     }
 
     useEffect(() => {
@@ -24,8 +21,8 @@ function Collapse(props) {
         const ctx = canvas.getContext("2d")
         const color = averageColor([ctx.getImageData(0, 0, canvas.width, canvas.height).data])
 
-        canvas = document.getElementById("output")
-        colorCanvas(canvas, color)
+        const outputCanvas = document.getElementById("output")
+        colorCanvas(outputCanvas, color)
         
     }, [props.page])
 

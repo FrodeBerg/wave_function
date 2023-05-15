@@ -6,14 +6,12 @@ export function paintCanvas(canvas, data, positionX = 0, positionY = 0, width = 
     ctx.putImageData(imageData, positionX, positionY)
 }
 
-export function colorCanvas(canvas, color, positionX = 0, positionY = 0, width = 0, height = 0) {
+export function colorCanvas(canvas, color, positionX = 0, positionY = 0, width = canvas.width, height = canvas.height) {
     const ctx = canvas.getContext("2d")
     ctx.fillStyle = color;
 
-    if (!width) width = ctx.width
-    if (!height) height = ctx.height
-
     ctx.fillRect(positionX, positionY, width, height)  
+    console.log(canvas, color, width, height)
 }
 
 export function averageColor(canvasArray) {
