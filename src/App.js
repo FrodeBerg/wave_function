@@ -20,7 +20,7 @@ function App() {
       setHasChanged={setHasChanged}
 
       /> 
-      <Collapse style={page === "collapse" ? "" : "none"} rules={rules}/> 
+      <Collapse style={page === "collapse" ? "" : "none"} rules={rules} page={page}/> 
     </div>
   );
 }
