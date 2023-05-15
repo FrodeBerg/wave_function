@@ -1,12 +1,9 @@
-export function paintCanvas(canvas, data) {
+export function paintCanvas(canvas, data, positionX = 0, positionY = 0, width = canvas.width, height = canvas.height) {
 
-    const x = canvas.width
-    const y = canvas.height
-
-    const imageData = new ImageData(data, x, y)
+    const imageData = new ImageData(data, width, height)
     const ctx = canvas.getContext("2d")
 
-    ctx.putImageData(imageData, 0, 0)
+    ctx.putImageData(imageData, positionX, positionY)
 }
 
 export function colorCanvas(canvas, color, positionX = 0, positionY = 0, width = 0, height = 0) {

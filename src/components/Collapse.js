@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react"
-import { scaleCanvas, averageColor, getRelativeMousePosition, colorCanvas } from "./helperFunctions"
+import { scaleCanvas, averageColor, getRelativeMousePosition, colorCanvas, paintCanvas } from "./helperFunctions"
 
 function Collapse(props) {
     
@@ -11,12 +11,10 @@ function Collapse(props) {
         if (e.target.id !== "output") return
         const [positionX, positionY] = getRelativeMousePosition(e)
         const canvas = e.target
-        const ctx = canvas.getContext("2d")
-        console.log(props.rules.tiles[0])
         const tile = props.rules.tiles[0]
-        const imageData = new ImageData(tile, props.rules.width, props.rules.height)
 
-        ctx.putImageData(imageData, positionX, positionY)
+        paintCanvas(canvas, tile, positionX, positionY, props.rules.width, props.rules.height)
+
         console.log(positionX, positionY)
 
     }
