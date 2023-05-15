@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react"
-import { scaleCanvas, averageColor, getRelativeMousePosition } from "./helperFunctions"
+import { scaleCanvas, averageColor, getRelativeMousePosition, colorCanvas } from "./helperFunctions"
 
 function Collapse(props) {
     
@@ -22,17 +22,12 @@ function Collapse(props) {
     }
 
     useEffect(() => {
-
         let canvas = document.getElementById("canvas")
-        let ctx = canvas.getContext("2d")
-        let collpasedCanvas = document.getElementById("output")
-        let collapsedCtx = collpasedCanvas.getContext("2d")
-    
+        const ctx = canvas.getContext("2d")
+        const color = averageColor([ctx.getImageData(0, 0, canvas.width, canvas.height).data])
 
-        let color = averageColor([ctx.getImageData(0, 0, canvas.width, canvas.height).data])
-        console.log(color)
-        collapsedCtx.fillStyle = color
-        collapsedCtx.fillRect(0, 0, collpasedCanvas.width, collpasedCanvas.height)
+        canvas = document.getElementById("output")
+        colorCanvas(canvas, color)
         
     }, [props.page])
 
