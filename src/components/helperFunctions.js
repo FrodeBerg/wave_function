@@ -21,7 +21,6 @@ export function averageColor(canvasArray) {
     let length = 0
 
     canvasArray.forEach(canvas => {
-        console.log(canvas)
         const pixelLength = canvas.length
         length += pixelLength
 
