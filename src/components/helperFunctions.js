@@ -11,7 +11,6 @@ export function colorCanvas(canvas, color, positionX = 0, positionY = 0, width =
     ctx.fillStyle = color;
 
     ctx.fillRect(positionX, positionY, width, height)  
-    console.log(canvas, color, width, height)
 }
 
 export function averageColor(canvasArray) {
@@ -66,4 +65,11 @@ export function getRelativeMousePosition(e) {
 
     return [positionX, positionY]
 
+}
+
+export function getKey(object, key, returnValue = []) {
+
+    if (object.hasOwnProperty(key)) return object[key]
+
+    return returnValue
 }

@@ -1,20 +1,43 @@
 import { React, useState, useEffect } from "react"
-import { scaleCanvas, averageColor, getRelativeMousePosition, colorCanvas, paintCanvas } from "./helperFunctions"
+import { scaleCanvas, averageColor, getRelativeMousePosition, colorCanvas, paintCanvas, getKey } from "./helperFunctions"
 
 function Collapse(props) {
     
     const [settings, setSettings] = useState({"x" : 100, "y" : 100})
 
-    function collapse(e) {
-        console.log(e)
+    function click(e) {
 
         if (e.target.id !== "output") return
-        const [positionX, positionY] = getRelativeMousePosition(e)
+        let [positionX, positionY] = getRelativeMousePosition(e)
+        const possibilities = {}
+        const queue = []
+        console.log(positionX, positionY)
+        positionX = tilePosition(props.rules.width, positionX)
+        positionY = tilePosition(props.rules.height, positionY)  
+        queue.push([positionX, positionY])
+        console.log(positionX, positionY)
         const canvas = e.target
-        const tile = props.rules.tiles[0]
+        const maxLength = props.rules.tiles.length
+        console.log(props.rules)
 
-        paintCanvas(canvas, tile, positionX, positionY, props.rules.width, props.rules.height)
+        while (queue.length) {
+            const [x, y] = queue.shift()
+            const position = `${x},${y}`
+            let tiles = getKey(possibilities, position, null)
+            if (!tiles || tiles.length === maxLength) {
+                tiles = [chooseRandom(props.rules.frequency)]
+            }
+            if (tiles.length === 1) {
+                console.log(props.rules.tiles[tiles[0]])
+                paintCanvas(canvas, props.rules.tiles[tiles[0]], canvasPosition(props.rules.width, positionX), canvasPosition(props.rules.height, positionY), props.rules.width, props.rules.height)
+            }
+            console.log(tiles)
+            // Update each side if necessary 
+            // if side is updated add that side to queue 
+        }
+    
     }
+
 
     useEffect(() => {
         let canvas = document.getElementById("canvas")
@@ -24,7 +47,7 @@ function Collapse(props) {
         const outputCanvas = document.getElementById("output")
         colorCanvas(outputCanvas, color)
         
-    }, [props.page])
+    }, [props.page, settings])
 
     return (
         <div className="Main" style={{display: props.style}}>
@@ -34,7 +57,7 @@ function Collapse(props) {
                 width={settings.x} 
                 height={settings.y} 
                 style={scaleCanvas(settings.x, settings.y)}
-                onClick={e => collapse(e)}>
+                onClick={e => click(e)}>
                 </canvas>
             </div>
             <div className="Bottom"> 
@@ -46,8 +69,26 @@ function Collapse(props) {
     )  
 }
 
-function chooseRandom(array, frequency) {
-    return array[Math.floor(Math.random() * array.length)]
+function canvasPosition(size, position) {
+    return position * (size - 1)
+}
+
+function tilePosition(size, position) {
+    return Math.ceil((position - 1) / (size - 1))
+}
+
+function chooseRandom(frequency) {
+    let total = 0
+    frequency.forEach(number => {
+        total += number
+    });
+
+    const randomNumber = Math.random() * total
+    let running = 0
+    for (let i = 0; i < frequency.length; i++) {
+        running += frequency[i]
+        if (randomNumber < running) return i
+    }
 }
 
 export default Collapse

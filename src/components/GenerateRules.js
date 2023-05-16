@@ -1,4 +1,4 @@
-import {paintCanvas} from "./helperFunctions"
+import {paintCanvas, getKey} from "./helperFunctions"
 
 function generateRules(tile, tiles, rules, frequenzy) {
     const isNewTile = getTilePosition(tiles, tile.data)
@@ -90,11 +90,6 @@ function addRules(tiles, rules, sides) {
     rules.tiles.push(sides)
 }
 
-function getKey(object, key, returnValue = []) {
 
-    if (object.hasOwnProperty(key)) return object[key]
-
-    return returnValue
-}
 
 export default generateRules
