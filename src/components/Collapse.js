@@ -21,30 +21,94 @@ function Collapse(props) {
         const maxHeight = tilePosition(props.rules.height, settings.y)
 
 
-        
         function loopQueue() {
             const [x, y] = queue.shift()
-            let changed = false
-            let tiles = []
-
-            const right = getKey(possibilities, [x+1, y], null)
-            const left = getKey(possibilities, [x-1, y], null)
-            const up = getKey(possibilities, [x, y+1], null)
-            const down = getKey(possibilities, [x, y-1], null)
-
-            if (!right && !left && !up && !down) {
-                tiles.push(chooseRandom(props.rules.frequency))
+            const position = `${x},${y}`
+            let tiles = getKey(possibilities, position, null)
+            if (!tiles || tiles.length === maxLength) {
+                tiles = [chooseRandom(props.rules.frequency)]
+                possibilities[position] = tiles
             }
 
+
+            if (x - 1 >= 0) {
+                const left = [...getSides(tiles, "left", "right")]
+                const diffLeft = difference(possibilities[`${x-1},${y}`], left)
+                if (diffLeft) {
+                    possibilities[`${x-1},${y}`] = diffLeft
+                    queue.push([x - 1, y])
+                }
+            }
+            if (x + 1 < maxWidth) {
+                const right = [...getSides(tiles, "right", "left")]
+                const diffRight = difference(possibilities[`${x+1},${y}`], right)
+                if (diffRight) {
+                    possibilities[`${x+1},${y}`] = diffRight
+                    queue.push([x + 1, y])
+                }                
+            }
+            if (y - 1 >= 0) {
+                const up = [...getSides(tiles, "up", "down")]
+                const diffup = difference(possibilities[`${x},${y-1}`], up)
+                if (diffup) {
+                    possibilities[`${x},${y-1}`] = diffup
+                    queue.push([x, y - 1])
+                }
+            }
+            if (y + 1 < maxHeight) {
+                const down = [...getSides(tiles, "down", "up")]
+                const diffdown = difference(possibilities[`${x},${y+1}`], down)
+                if (diffdown) {
+                    possibilities[`${x},${y+1}`] = diffdown
+                    queue.push([x, y + 1])
+                }                
+            }
+
+            if (tiles.length === 1) {
+                console.log("painting", x, y, tiles)
+                paintCanvas(canvas, props.rules.tiles[tiles[0]], canvasPosition(props.rules.width, x), canvasPosition(props.rules.height, y), props.rules.width, props.rules.height)
+            } else {
+                uncertainQueue.push([x, y])
+                //queue.push([x, y])
+            }
+
+            if (!queue.length) {
+                while (uncertainQueue.length) {
+                    const [newX, newY] = uncertainQueue.shift()
+                    if ( possibilities[`${newX},${newY}`].length !== 1) {
+                        const random = [chooseRandom(props.rules.frequency, possibilities[`${newX},${newY}`])]
+                        console.log("random", random)
+                        possibilities[`${newX},${newY}`] = random
+                        queue.push([newX, newY])    
+                        break
+                    }
+                }
+                
+            }
 
             if (queue.length) {
                 setTimeout(() => {
                     loopQueue()
-                }, 10);
+                }, 0);
+            } else {
+                console.log(possibilities)
             }
+            // Update each side if necessary 
+            // if side is updated add that side to queue 
         }
 
         loopQueue()
+        
+
+        function getSides(tiles, side, oppositeSide) {
+            let sides = []
+            tiles.forEach(tile => {
+                const tileSide = (props.rules.rules.tiles[tile][side])
+                sides = sides.concat(props.rules.rules.sides[oppositeSide][tileSide])
+            })
+            return new Set(sides)
+        }
+    
     }
 
 
@@ -84,6 +148,22 @@ function canvasPosition(size, position) {
 
 function tilePosition(size, position) {
     return Math.ceil((position - 1) / (size - 1))
+}
+
+function difference(oldElements, newElments) {
+    if (!newElments.length) return false
+    if (!oldElements) return newElments
+    const intersection = []
+    let isUnque = false
+    oldElements.forEach(element => {
+        if (newElments.includes(element)) {
+           intersection.push(element)
+        } else {
+            isUnque = true
+        }
+    })
+    if (isUnque && intersection.length) return intersection
+    return false
 }
 
 function chooseRandom(frequency, tiles = null) {
