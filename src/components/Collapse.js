@@ -21,7 +21,7 @@ function Collapse(props) {
         const maxHeight = tilePosition(props.rules.height, settings.y)
 
 
-        function loopQueue(iteration = 0) {
+        function loopQueue() {
             const [x, y] = queue.shift()
             //console.log("______", x, y, "_______")
             //console.log(Object.assign({}, possibilities))
@@ -46,8 +46,6 @@ function Collapse(props) {
                 const right = [...getSides(tiles, "right", "left")]
                 const diffRight = difference(possibilities[`${x+1},${y}`], right)
                 if (diffRight) {
-                    //console.log("right", diffRight)
-
                     possibilities[`${x+1},${y}`] = diffRight
                     queue.push([x + 1, y])
                 }                
@@ -56,8 +54,6 @@ function Collapse(props) {
                 const up = [...getSides(tiles, "up", "down")]
                 const diffup = difference(possibilities[`${x},${y-1}`], up)
                 if (diffup) {
-                   // console.log("up", diffup)
-
                     possibilities[`${x},${y-1}`] = diffup
                     queue.push([x, y - 1])
                 }
@@ -66,14 +62,13 @@ function Collapse(props) {
                 const down = [...getSides(tiles, "down", "up")]
                 const diffdown = difference(possibilities[`${x},${y+1}`], down)
                 if (diffdown) {
-                   // console.log("down", diffdown)
-
                     possibilities[`${x},${y+1}`] = diffdown
                     queue.push([x, y + 1])
                 }                
             }
 
             if (tiles.length === 1) {
+                console.log("painting", x, y, tiles)
                 paintCanvas(canvas, props.rules.tiles[tiles[0]], canvasPosition(props.rules.width, x), canvasPosition(props.rules.height, y), props.rules.width, props.rules.height)
             } else {
                 const tmpTiles = []
@@ -85,7 +80,7 @@ function Collapse(props) {
                 uncertainQueue.push([x, y])
                 //queue.push([x, y])
             }
-        
+
             if (!queue.length) {
                 //console.log(x, y, "______ Uncertain!!!!!! _______")
                 while (uncertainQueue.length) {
@@ -103,30 +98,24 @@ function Collapse(props) {
             }
 
             if (queue.length) {
-
-                if (iteration > 1) {
-                    setTimeout(() => {
-                        loopQueue()
-                    }, 100);
-                } else {
-                    loopQueue(iteration + 1)
-                }
-
+                setTimeout(() => {
+                    loopQueue()
+                }, 0);
             } else {
-
+                console.log(possibilities)
             }
             // Update each side if necessary 
             // if side is updated add that side to queue 
         }
 
         loopQueue()
+        
 
         function getSides(tiles, side, oppositeSide) {
             let sides = []
             tiles.forEach(tile => {
                 const tileSide = (props.rules.rules.tiles[tile][side])
-
-                sides = sides.concat(getKey(props.rules.rules.sides[oppositeSide], tileSide))
+                sides = sides.concat(props.rules.rules.sides[oppositeSide][tileSide])
             })
             return new Set(sides)
         }
@@ -173,7 +162,7 @@ function tilePosition(size, position) {
 }
 
 function difference(oldElements, newElments) {
-    if (!newElments.length || !newElments) return false
+    if (!newElments.length) return false
     if (!oldElements) return newElments
     const intersection = []
     let isUnque = false
@@ -184,7 +173,7 @@ function difference(oldElements, newElments) {
             isUnque = true
         }
     })
-    if (isUnque && intersection.length && intersection) return intersection
+    if (isUnque && intersection.length) return intersection
     return false
 }
 
@@ -195,6 +184,7 @@ function chooseRandom(frequency, tiles = null) {
             tiles.push(i)
         }
     } else {
+        console.log(tiles)
     }
     
     let total = 0
