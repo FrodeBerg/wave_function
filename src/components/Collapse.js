@@ -21,7 +21,7 @@ function Collapse(props) {
         const maxHeight = tilePosition(props.rules.height, settings.y)
 
 
-        function loopQueue() {
+        function loopQueue(count = 0) {
             const [x, y] = queue.shift()
             //console.log("______", x, y, "_______")
             //console.log(Object.assign({}, possibilities))
@@ -77,7 +77,7 @@ function Collapse(props) {
                 })
                 const color = averageColor(tmpTiles)
                 colorCanvas(canvas, color, canvasPosition(props.rules.width, x), canvasPosition(props.rules.height, y), props.rules.width, props.rules.height)
-                uncertainQueue.push([x, y])
+                //uncertainQueue.push([x, y])
                 //queue.push([x, y])
             }
 
@@ -98,9 +98,15 @@ function Collapse(props) {
             }
 
             if (queue.length) {
-                setTimeout(() => {
-                    loopQueue()
-                }, 0);
+                const intervall = 100;
+                if (count < intervall) {
+                    loopQueue(count + 1)  
+                } else {
+                    setTimeout(() => {
+                        loopQueue()
+                    }, 0);                    
+                }
+
             } else {
                 console.log(possibilities)
             }
