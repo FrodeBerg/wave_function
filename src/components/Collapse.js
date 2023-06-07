@@ -23,11 +23,12 @@ function Collapse(props) {
 
         function loopQueue(iteration = 0) {
             const [x, y] = queue.shift()
+            //console.log("______", x, y, "_______")
+            //console.log(Object.assign({}, possibilities))
             const position = `${x},${y}`
             let tiles = getKey(possibilities, position, null)
             if (!tiles || tiles.length === maxLength) {
                 tiles = [chooseRandom(props.rules.frequency)]
-                console.log(tiles)
                 possibilities[position] = tiles
             }
 
@@ -36,6 +37,7 @@ function Collapse(props) {
                 const left = [...getSides(tiles, "left", "right")]
                 const diffLeft = difference(possibilities[`${x-1},${y}`], left)
                 if (diffLeft) {
+                    //console.log("Left", diffLeft)
                     possibilities[`${x-1},${y}`] = diffLeft
                     queue.push([x - 1, y])
                 }
@@ -44,6 +46,7 @@ function Collapse(props) {
                 const right = [...getSides(tiles, "right", "left")]
                 const diffRight = difference(possibilities[`${x+1},${y}`], right)
                 if (diffRight) {
+                    //console.log("right", diffRight)
 
                     possibilities[`${x+1},${y}`] = diffRight
                     queue.push([x + 1, y])
@@ -53,6 +56,7 @@ function Collapse(props) {
                 const up = [...getSides(tiles, "up", "down")]
                 const diffup = difference(possibilities[`${x},${y-1}`], up)
                 if (diffup) {
+                   // console.log("up", diffup)
 
                     possibilities[`${x},${y-1}`] = diffup
                     queue.push([x, y - 1])
@@ -62,6 +66,7 @@ function Collapse(props) {
                 const down = [...getSides(tiles, "down", "up")]
                 const diffdown = difference(possibilities[`${x},${y+1}`], down)
                 if (diffdown) {
+                   // console.log("down", diffdown)
 
                     possibilities[`${x},${y+1}`] = diffdown
                     queue.push([x, y + 1])
@@ -71,16 +76,24 @@ function Collapse(props) {
             if (tiles.length === 1) {
                 paintCanvas(canvas, props.rules.tiles[tiles[0]], canvasPosition(props.rules.width, x), canvasPosition(props.rules.height, y), props.rules.width, props.rules.height)
             } else {
+                const tmpTiles = []
+                tiles.forEach(tile => {
+                    tmpTiles.push(props.rules.tiles[tile])
+                })
+                const color = averageColor(tmpTiles)
+                colorCanvas(canvas, color, canvasPosition(props.rules.width, x), canvasPosition(props.rules.height, y), props.rules.width, props.rules.height)
                 uncertainQueue.push([x, y])
                 //queue.push([x, y])
             }
         
             if (!queue.length) {
+                //console.log(x, y, "______ Uncertain!!!!!! _______")
                 while (uncertainQueue.length) {
                     const [newX, newY] = uncertainQueue.shift()
                     if ( possibilities[`${newX},${newY}`].length !== 1) {
+                        //console.log(Object.assign({}, possibilities))
+                        //console.log(newX, newY)
                         const random = [chooseRandom(props.rules.frequency, possibilities[`${newX},${newY}`])]
-                        console.log("random", random)
                         possibilities[`${newX},${newY}`] = random
                         queue.push([newX, newY])    
                         break
@@ -91,10 +104,10 @@ function Collapse(props) {
 
             if (queue.length) {
 
-                if (iteration > 100) {
+                if (iteration > 1) {
                     setTimeout(() => {
                         loopQueue()
-                    }, 0);
+                    }, 100);
                 } else {
                     loopQueue(iteration + 1)
                 }

@@ -24,12 +24,13 @@ export function averageColor(canvasArray) {
         const pixelLength = canvas.length
         length += pixelLength
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < pixelLength; i++) {
             let color = i % 4
             if (color === 0) red += canvas[i]
             if (color === 1) green += canvas[i]
             if (color === 2) blue += canvas[i]
             if (color === 3) alpha += canvas[i]
+
         }
         
     })
@@ -38,7 +39,6 @@ export function averageColor(canvasArray) {
     green = Math.floor(green / (length / 4))
     blue = Math.floor(blue / (length / 4))
     alpha = Math.floor(alpha / (length / 4))
-
     return `rgba(${red}, ${green}, ${blue}, ${alpha})`
 }
 
