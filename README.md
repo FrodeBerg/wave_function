@@ -1,70 +1,19 @@
-# Getting Started with Create React App
+### FrodeBergs wave function
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+This is my loose take on the increasingly popular Wave function collapse algorithm. Even though it takes heavy inspiration from others such as https://github.com/mxgmn/WaveFunctionCollapse the actual algorithm is pretty different. It is not finished and i will probably not finish it because my take on the algorithm is far more random than others wich kind of destroys the charm with the original algorithm.
 
-In the project directory, you can run:
 
-### `npm start`
+# How it works
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+It creates 2 dimensional rules from an input image or canvas. These rules are generated with one pixel offsets regardless of how big the dimensions of the rules are, for example if the input is 10 pixels wide and the rule width is 3 it will generate 10 - 3 = 7 rules for each row. To later connect these rules it places each side of the rule in a hashmap divided into sides. If two opposite sides equal each other that means those two rules go together. It starts with choosing a starting tile, then shrinks the possibilities for all direct neighbors then adds them to the queue and repeats this process. This makes the algorithm super fast, being able to accept any input, rule and output sizes and what I thought would generate even cooler images than previous attempts. Even though this leads to the algorithm generating images that are locally similar to the input image they sadly are a bit too random.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# What is left
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Finishing up the style and css but more importantly actually completing the algorithm. The algorithm doesn't make any random choices (except for the very first one) which means it generates only a partially complete image but doesn't complete it. Finishing the random choices means that the algorithm must be able to backtrack to correct eventual mistakes and that is much more work for a new algorithm that might not even be that impressive. I will probably create a new project from the ground up with a new algorithm, even though I love my approach :).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Thanks for reading!!
